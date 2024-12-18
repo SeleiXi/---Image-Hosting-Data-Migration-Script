@@ -13,9 +13,18 @@ type NewImageTable struct {
 	ImageFileData    []byte    `json:"image_file_data"`
 }
 
+func (NewImageTable) TableName() string {
+	return "image_table" // 映射新图床表名
+}
+
 type OriginalImageTable struct {
 	CreatedAt  time.Time
 	UpdatedAt  time.Time
 	OriginName string
+	Path       string
 	Name       string // 包括identifier和extension
+}
+
+func (OriginalImageTable) TableName() string {
+	return "images" // 测试服的旧图床表名
 }

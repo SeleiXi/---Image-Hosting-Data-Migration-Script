@@ -71,4 +71,6 @@ func Init() {
 		panic(err)
 	}
 
+	slog.Info("database init success")
+
 }
