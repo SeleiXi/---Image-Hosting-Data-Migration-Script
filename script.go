@@ -112,7 +112,7 @@ func storeImageInDatabase(fileName, fileExtension string, imageData []byte, imag
 		CreatedAt:       createdAt,
 		UpdatedAt:       updatedAt,
 		ImageIdentifier: imageIdentifier,
-		// 待替换（从其他地方获取文件的Original Name）
+		// 待替换
 		OriginalFileName: fileName,
 		ImageType:        fileExtension,
 		ImageFileData:    imageData,
@@ -127,59 +127,3 @@ func storeImageInDatabase(fileName, fileExtension string, imageData []byte, imag
 
 	return nil
 }
-
-// package main
-//
-// import (
-// 	"fmt"
-// 	"github.com/opentreehole/backend/import_image/model"
-// 	"io"
-// 	"io/ioutil"
-// 	"log"
-// 	"net/http"
-// 	"path/filepath"
-// 	"strings"
-// 	"log/slog"
-// )
-//
-// func main() {
-// 	model.Init()
-//
-// 	for {
-// 		imageURL := ""
-// 		resp, err := http.Get(imageURL)
-// 		if err != nil {
-// 			log.Printf(err.Error())
-// 		}
-// 		if resp.StatusCode != http.StatusOK {
-// 			log.Printf("bad status: %s", resp.Status)
-// 		}
-//
-// 		if err != nil {
-// 			fmt.Println("Error downloading image.")
-// 		} else {
-// 			fmt.Println("Image downloaded.")
-// 		}
-//
-// 		imageData, err := ioutil.ReadAll(resp.Body)
-// 		file := ""
-// 		fileExtension := strings.TrimPrefix(filepath.Ext(file.Filename), ".")
-// 		fileContent, err := file.Open()
-//
-//
-// 		imageUrl :=
-// 		uploadedImage := &ImageTable{
-// 			ImageIdentifier: imageIdentifier,
-// 			BaseName:        originalFileName,
-// 			ImageType:       fileExtension,
-// 			ImageFileData:   imageData,
-// 		}
-// 		err = model.DB.Create(&uploadedImage).Error
-//
-// 		if err != nil {
-// 			slog.LogAttrs(context.Background(), slog.LevelError, "Database cannot store the image", slog.String("err", err.Error()))
-// 		}
-//
-//
-// 	}
-// }
