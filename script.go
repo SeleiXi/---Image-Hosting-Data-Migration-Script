@@ -19,8 +19,6 @@ func main() {
 	model.Init()
 
 	for {
-		// 1.存createdAt和uploadedAt 2.存Original file name
-
 		imageURL := "http://localhost:8000/api/i/2024/12/17/6298d7df669f33.png"
 
 		imageData, err := downloadImage(imageURL)
@@ -108,7 +106,7 @@ func downloadImage(imageURL string) ([]byte, error) {
 
 func storeImageInDatabase(fileName, fileExtension string, imageData []byte, imageIdentifier string, createdAt time.Time, updatedAt time.Time) error {
 
-	uploadedImage := &model.ImageTable{
+	uploadedImage := &model.NewImageTable{
 		CreatedAt:       createdAt,
 		UpdatedAt:       updatedAt,
 		ImageIdentifier: imageIdentifier,
@@ -118,7 +116,7 @@ func storeImageInDatabase(fileName, fileExtension string, imageData []byte, imag
 		ImageFileData:    imageData,
 	}
 
-	err := model.DB.Create(&uploadedImage).Error
+	err := model.NewDB.Create(&uploadedImage).Error
 	if err != nil {
 		slog.LogAttrs(context.Background(), slog.LevelError, "Database cannot store the image",
 			slog.String("err", err.Error()), slog.String("fileName", fileName))

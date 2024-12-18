@@ -11,7 +11,6 @@ import (
 	"time"
 )
 
-var DB *gorm.DB
 var Logger = slog.New(slog.NewJSONHandler(os.Stdout, nil))
 
 type mLogger struct {
@@ -38,9 +37,12 @@ var GormConfig = &gorm.Config{
 	),
 }
 
+var NewDB *gorm.DB
+var OriginalDB *gorm.DB
+
 var Config struct {
-	DbURL    string `env:"DB_URL"`
-	HostName string `env:"HOST_NAME" envDefault:"localhost:8000"`
+	OriginalDbURL string `env:"Original_DB_URL"` // 原本的图床数据库地址
+	NewDbURL      string `env:"New_DB_URL"`      // 要迁移的数据库地址
 }
 
 func Init() {
@@ -48,12 +50,23 @@ func Init() {
 	if err != nil {
 		panic(err)
 	}
-	source := mysql.Open(Config.DbURL)
-	DB, err = gorm.Open(source, GormConfig)
+	originalDbSource := mysql.Open(Config.OriginalDbURL)
+	newDbSource := mysql.Open(Config.NewDbURL)
+
+	OriginalDB, err = gorm.Open(originalDbSource, GormConfig)
 	if err != nil {
 		panic(err)
 	}
-	err = DB.AutoMigrate(&ImageTable{})
+	err = OriginalDB.AutoMigrate(&OriginalImageTable{})
+	if err != nil {
+		panic(err)
+	}
+
+	NewDB, err = gorm.Open(newDbSource, GormConfig)
+	if err != nil {
+		panic(err)
+	}
+	err = NewDB.AutoMigrate(&NewImageTable{})
 	if err != nil {
 		panic(err)
 	}
