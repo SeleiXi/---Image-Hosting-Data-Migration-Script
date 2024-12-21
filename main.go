@@ -47,7 +47,7 @@ func main() {
 				slog.Error("ERROR downloading image", "identifier", imageIdentifier, "err", err)
 				continue
 			}
-			slog.Info("Image downloaded successfully", "identifier", imageIdentifier)
+			// slog.Info("Image downloaded successfully", "identifier", imageIdentifier)
 
 			originalFileName := image.OriginName
 			fileExtension := strings.TrimPrefix(filepath.Ext(image.Name), ".")
@@ -62,9 +62,9 @@ func main() {
 					// slog.Error("Error storing image in database", "identifier", imageIdentifier, "err", err)
 					log.Println("Duplicated key" + imageIdentifier)
 				}
-			} else {
-				slog.Info("Image stored in database successfully", "identifier", imageIdentifier)
-			}
+			} // else {
+			// 	slog.Info("Image stored in database successfully", "identifier", imageIdentifier)
+			// }
 		}
 
 		images = nil
