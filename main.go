@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"github.com/opentreehole/backend/model"
 	"io"
@@ -55,7 +56,11 @@ func main() {
 
 			err = storeImageInDatabase(originalFileName, fileExtension, imageData, imageIdentifier, createdAt, updatedAt)
 			if err != nil {
-				slog.Error("Error storing image in database", "identifier", imageIdentifier, "err", err)
+				if errors.Is(gorm.ErrDuplicatedKey, err) {
+					fmt.Println("Duplicated key" + imageIdentifier)
+				} else {
+					slog.Error("Error storing image in database", "identifier", imageIdentifier, "err", err)
+				}
 			} else {
 				slog.Info("Image stored in database successfully", "identifier", imageIdentifier)
 			}
