@@ -44,7 +44,7 @@ func main() {
 
 			imageData, err := downloadImage(imageURL)
 			if err != nil {
-				slog.Error("Error downloading image", "identifier", imageIdentifier, "err", err)
+				slog.Error("ERROR downloading image", "identifier", imageIdentifier, "err", err)
 				continue
 			}
 			slog.Info("Image downloaded successfully", "identifier", imageIdentifier)
@@ -57,9 +57,10 @@ func main() {
 			err = storeImageInDatabase(originalFileName, fileExtension, imageData, imageIdentifier, createdAt, updatedAt)
 			if err != nil {
 				if errors.Is(gorm.ErrDuplicatedKey, err) {
-					fmt.Println("Duplicated key" + imageIdentifier)
+					log.Println("Duplicated key" + imageIdentifier)
 				} else {
-					slog.Error("Error storing image in database", "identifier", imageIdentifier, "err", err)
+					// slog.Error("Error storing image in database", "identifier", imageIdentifier, "err", err)
+					log.Println("Duplicated key" + imageIdentifier)
 				}
 			} else {
 				slog.Info("Image stored in database successfully", "identifier", imageIdentifier)
@@ -116,7 +117,11 @@ func storeImageInDatabase(originalFileName, fileExtension string, imageData []by
 
 	err := model.NewDB.Create(&uploadedImage).Error
 	if err != nil {
-		slog.Error("Database cannot store the image", "identifier", imageIdentifier, "err", err)
+		if errors.As(err, &gorm.ErrDuplicatedKey) {
+			log.Println("duplicate key" + imageIdentifier)
+		} else {
+			log.Println("ERROR storing image in database", "identifier", imageIdentifier, "err", err)
+		}
 		return err
 	}
 
