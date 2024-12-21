@@ -5,6 +5,7 @@ import (
 )
 
 type NewImageTable struct {
+	ID               int       `json:"id" gorm:"primaryKey"`
 	CreatedAt        time.Time `json:"created_at"`
 	UpdatedAt        time.Time `json:"updated_at"`
 	ImageIdentifier  string    `json:"image_identifier" gorm:"uniqueIndex;size:20"`
