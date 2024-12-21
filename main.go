@@ -42,7 +42,7 @@ func main() {
 
 			imageData, err := downloadImage(imageURL)
 			if err != nil {
-				log.Printf("Error downloading image: %v\n", err)
+				println("Error downloading image:", image.Name)
 				continue
 			}
 			fmt.Println("Image downloaded successfully.")
